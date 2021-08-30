@@ -81,7 +81,7 @@ namespace RandomYTGenerátor.Models
                             throw new Exception();
 
                         var listStats = await GetSubsJson(_author.GetValueOrDefault(key));
-                        return new string[] { "https://www.youtube-nocookie.com/embed/" + item.videoId, listStats.subCount.ToString(), item.viewCount.ToString(), dateTime.ToString("d") };
+                        return new string[] { "https://www.youtube-nocookie.com/embed/" + item.videoId + "?fs=0&modestbranding=1&rel=0", listStats.subCount.ToString(), item.viewCount.ToString(), dateTime.ToString("d") };
                     }
                 }
 

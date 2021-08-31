@@ -18,7 +18,15 @@ namespace RandomYTGenerátor.Models
 
     public class VideoStats
     {
+        public int subCount { get; set; }
+    }
+
+    public class Serialized
+    {
+        public string videoId;
         public int subCount;
+        public long viewCount;
+        public long published;
     }
 
     public class RandomYtVideo
@@ -55,7 +63,7 @@ namespace RandomYTGenerátor.Models
             return JsonConvert.DeserializeObject<VideoStats>(response);
         }
 
-        public async Task<string[]> GetVideoAsync()
+        public async Task<Serialized> GetVideoAsync()
         {
             try
             {
@@ -74,23 +82,27 @@ namespace RandomYTGenerátor.Models
                 {
                     if (item.videoId == key)
                     {
-                        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-                        dateTime = dateTime.AddSeconds(item.published);
-
                         if (_author.GetValueOrDefault(key) == null)
                             throw new Exception();
 
                         var listStats = await GetSubsJson(_author.GetValueOrDefault(key));
-                        return new string[] { "https://www.youtube-nocookie.com/embed/" + item.videoId + "?fs=0&modestbranding=1&rel=0", listStats.subCount.ToString(), item.viewCount.ToString(), dateTime.ToString("d") };
+                        return new Serialized { videoId = "https://www.youtube-nocookie.com/embed/" + item.videoId + "?fs=0&modestbranding=1&rel=0", subCount = listStats.subCount, viewCount = item.viewCount, published = item.published };
                     }
                 }
 
-                return new string[] { "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ", "N/A", "N/A", "N/A" };
+                return new Serialized { videoId = "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ", subCount = 0, viewCount = 0, published = 0 };
             }
             catch (HttpRequestException)
             {
-                return new string[] { "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ", "N/A", "N/A", "N/A" };
+                return new Serialized { videoId = "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ", subCount = 0, viewCount = 0, published = 0 };
             }
+        }
+
+        public async Task<string> GetJsonAsync()
+        {
+            var generator = await GetVideoAsync();
+
+            return JsonConvert.SerializeObject(generator);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿@model string[]
-
-<center>
+﻿<center>
     <div id="header">
         <h1><b>Random YT video!</b></h1>
         <h2>Explore the bottom of the internet</h2>
@@ -8,20 +6,21 @@
     <div id="content">
         <div id="stats">
             <p>
-                <b>Views: </b>@Model[1]<br />
-                <b>Subscribers: </b>@Model[2]<br />
-                <b>Published: </b>@Model[3]<br />
+                <b>Views: </b>@ViewBag.viewCount<br />
+                <b>Subscribers: </b>@ViewBag.subCount<br />
+                <b>Published: </b>@ViewBag.published<br />
             </p>
         </div>
         <div id="video" class="video">
             <iframe class="responsive-iframe"
                     width="640"
                     height="360"
-                    src="@Model[0]"
+                    src="@ViewBag.videoId"
                     frameborder="1"
                     style="border: solid 4px #b1d9f7"></iframe>
         </div>
         <div id="button">
+            <button class="button" onclick="location.href='@Url.Action("api", "Api")'">API</button>
             <button class="button" onClick="window.location.reload();">Next video</button>
         </div>
     </div>
